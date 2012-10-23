@@ -1,0 +1,19 @@
+# float_of_int int_of_float 5.0;;
+Error: This function is applied to too many arguments;
+maybe you forgot a `;'
+# float_of_int(int_of_float 5.0);;
+- : float = 5.
+
+# sin 3.14 /. 2.0 ** 2.0 +. cos 3.14 /. 2.0 ** 2.0;;
+- : float = -0.249601519702763175
+# sin 3.14 /. 2.0 **. 2.0 +. cos 3.14 /. 2.0 **. 2.0;;
+# sin (3.14 /. 2.0) ** 2.0 +. cos (3.14 /. 2.0) ** 2.0;;
+- : float = 1.
+
+# sqrt 3 * 3 + 4 * 4;;
+Error: This expression has type int but an expression was expected of type
+         float
+# sqrt(3.0 *. 3.0 +. 4.0 *. 4.0);;
+- : float = 5.
+# 
+
