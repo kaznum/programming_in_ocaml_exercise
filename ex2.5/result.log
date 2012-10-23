@@ -1,0 +1,15 @@
+# let a_2' = 1;;
+val a_2' : int = 1
+# let ____ = 1;;
+val ____ : int = 1
+# let Cat = 1;;
+Error: Unbound constructor Cat
+# let _'_'_ = 1;;
+val _'_'_ : int = 1
+# let 7eleven = 1;;
+Error: Syntax error
+# let 'ab2_ = 1;;
+Error: Syntax error
+# let _ = 1;;
+- : int = 1
+
