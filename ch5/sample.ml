@@ -91,3 +91,40 @@ let rec assoc_error a = function
 
 assoc_error "Tokyo" city_phone;;
 *)
+
+(* the sorting *)
+
+let nextrand seed =
+  let a = 16807.0 and m = 2147483647.0 in
+  let t = a *. seed
+  in t -. m *. floor ( t/. m)
+let rec randlist n seed tail =
+  if n = 0 then (seed, tail)
+  else randlist (n - 1) (nextrand seed) (seed::tail);;
+
+let rec insert x = function
+[] -> [x]
+  | y :: rest when x < y -> x :: ( y :: rest )
+  | y :: rest -> y :: (insert x rest );;
+
+let rec insertion_sort = function
+[] -> []
+  | x :: rest -> insert x ( insertion_sort rest);;
+
+insertion_sort ( snd (randlist 10 1.0 []));;
+
+
+let rec quick_sort = function
+([] | [_]) as l -> l
+  | pivot :: rest ->
+    let rec partition left right = function
+    [] ->
+      (quick_sort left) @ (pivot :: quick_sort right)
+      | y:: ys ->
+	if pivot < y then partition left ( y :: right) ys
+	else partition (y :: left) right ys
+    in partition [] [] rest;;
+
+insertion_sort ( snd (randlist 10000 1.0 []));;
+
+quick_sort ( snd (randlist 10000 1.0 []));;
