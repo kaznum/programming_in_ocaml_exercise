@@ -17,17 +17,17 @@ let rec quick_sort = function
         else partition (y :: left) right ys
     in partition [] [] rest;;
 
-let rec quick_sort2 results = function
-    [] -> results
-  | [x] -> x::results
-  | pivot :: rest ->
-    let rec partition left right results = function
-       [] -> let right_results = pivot :: quick_sort2 results right in
-	  quick_sort2 right_results left
-      | y::ys ->
-        if pivot < y then partition left ( y::right) results ys
-        else partition (y :: left) right results ys
-    in partition [] [] results rest;;
+let rec quick_sort2 list results =
+  match list with
+      [] -> results
+    | [x] -> x::results
+    | pivot :: rest ->
+      let rec partition left right list results =
+	match list with
+	    [] -> quick_sort2 left (pivot :: quick_sort2 right results)
+	  | y::ys when pivot < y -> partition left (y::right) ys results
+	  | y::ys -> partition (y::left) right ys results 
+      in partition [] [] rest results;;
 
-quick_sort ( snd (randlist 100000 1.0 []));;
-quick_sort2 [] ( snd (randlist 100000 1.0 []));;
+quick_sort (snd (randlist 100000 1.0 []));;
+quick_sort2 (snd (randlist 100000 1.0 [])) [];;
