@@ -130,3 +130,29 @@ let comptree = Br(1, Br(2, Br(4, Lf, Lf), Br(5, Lf, Lf)),
 
 size comptree;;
 depth comptree;;
+
+let rec preorder = function
+  Lf -> []
+  | Br (x, left, right) -> x::(preorder left) @ (preorder right);;
+
+preorder comptree;;
+
+let rec inorder = function
+  Lf -> []
+  | Br (x, left, right) -> (inorder left) @ (x::inorder right);;
+
+inorder comptree;;
+
+let rec postorder = function
+  Lf -> []
+  | Br (x, left, right) -> (postorder left) @ (postorder right) @ [x];;
+postorder comptree;;
+
+
+let rec preord t l =
+  match t with
+      Lf -> l
+    | Br(x, left, right) -> x::(preord left (preord right l));;
+
+preord comptree [];;
+      
