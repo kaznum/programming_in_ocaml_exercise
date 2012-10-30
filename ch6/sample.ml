@@ -155,4 +155,100 @@ let rec preord t l =
     | Br(x, left, right) -> x::(preord left (preord right l));;
 
 preord comptree [];;
-      
+
+(* rose tree *)
+type 'a rosetree = RLf | RBr of 'a * 'a rosetree list;;
+
+type ('a, 'b) xml = XLf of 'b option | XBr of 'a * ('a, 'b) xml list;;
+
+let addressbook =
+  XBr ("addressbook", [
+    XBr ("person", [
+      XBr ("name", [XLf (Some "Kazuya NUMATA")]);
+      XBr ("tel", [XLf (Some "011-111-2222")])]);
+    XBr("person", [XLf None]);
+    XBr("person", [XLf None])]);;
+
+let rec string_of_xml = function
+XBr (tag, xml_list) -> "<" ^ tag ^ ">"
+  ^ string_of_xmllist xml_list
+  ^ "</" ^ tag ^">"
+  | XLf None -> ""
+  | XLf (Some s) -> s
+and string_of_xmllist = function
+[] -> ""
+  | xml :: rest -> string_of_xml xml ^ string_of_xmllist rest;;
+
+string_of_xml addressbook;;
+
+let rec rosetree_of_tree = function
+Lf -> RLf
+  | Br (a, left, right) -> RBr(a, map rosetree_of_tree [left; right]);;
+
+let rec tree_of_rtree = function
+RLf -> Br (None, Lf, Lf)
+  | RBr (a, rtrees) -> Br (Some a, tree_of_rtreelist rtrees, Lf)
+and tree_of_rtreelist = function
+[] -> Lf
+  | rtree :: rest -> let Br (a, left, Lf) = tree_of_rtree rtree in
+		     Br (a, left, tree_of_rtreelist rest);;
+(*  rtree 部分が b以下 、restがe, f以下になり、元々はaの子だったが、Br (a, left, tree_of_rtreelist rest)の部分で、e,fがbの子要素になる *)
+
+let rtree =
+  RBr ("a", [
+    RBr ("b", [
+      RBr ("c", [RLf]);
+      RLf;
+      RBr ("d", [RLf])]);
+    RBr ("e", [RLf]);
+    RBr ("f", [RLf])]);;
+
+tree_of_rtree rtree;;
+
+type intseq = Cons of int * (int -> intseq);;
+
+let rec f x = Cons(x+1, f);;
+f 0;;
+f 1;;
+f 3;;
+
+let rec step2 x = Cons(x+2, step2);;
+
+let Cons(x1, f1) = step2 0
+let Cons(x2, f2) = f1 x1
+let Cons(x3, f3) = f2 x2;;
+
+let rec step n x = Cons(x+n, step (n+1));;
+let Cons(x1, f1) = step 1 0;;
+let Cons(x2, f2) = f1 x1;;
+let Cons(x3, f3) = f2 x2;;
+let Cons(x4, f4) = f3 x3;;
+let Cons(x5, f5) = f4 x4;;
+
+let rec nthseq n (Cons(x, f)) =
+  if n = 1 then x
+  else nthseq (n-1) (f x);;
+
+nthseq 7 (step2 0);;
+nthseq 6 (step 1 0);;
+
+let is_prime x =
+  let rec is_divisible_from_2_to n =
+    (n > 1) && ((x mod n = 0) || is_divisible_from_2_to (n-1))
+  in not (is_divisible_from_2_to (x - 1));;
+
+is_prime 3;;
+is_prime 9;;
+is_prime 97;;
+
+let rec next_prime x =
+  if is_prime (x + 1) then x + 1 else next_prime(x + 1);;
+
+next_prime 7;;
+next_prime 20;;
+next_prime 97;;
+
+let rec prime_seq x =
+  if is_prime(x+1) then Cons(x+1, prime_seq) else prime_seq (x+1);;
+nthseq 20 (prime_seq 1);;
+
