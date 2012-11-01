@@ -11,14 +11,11 @@ and tree_of_rtreelist = function
 [] -> Lf
   | rtree :: rest -> let Br (a, left, Lf) = tree_of_rtree rtree in
                      Br (a, left, tree_of_rtreelist rest);;
-
-let rec to_string t =
-  match t with
-      Lf -> "(Lf)"
-    | Br(None, left, right) ->
-      "Br(None, " ^ (to_string left) ^ ", " ^ (to_string right) ^ ")"
-    | Br(Some x, left, right) ->
-      "Br(Some " ^ x ^ ", " ^ (to_string left) ^ ", " ^ (to_string right) ^ ")";;
+let map f list =
+  match list with
+      [] -> []
+    | x::xs ->
+      (f x)::(map f xs);;
 
 let rec brothers t =
   match t with
@@ -26,14 +23,7 @@ let rec brothers t =
     | Br(x, left, right) ->
       (Br(x, left, Lf)::brothers(right));;
 
-let map f list =
-  match list with
-      [] -> []
-    | x::xs ->
-      (f x)::(map f xs);;
-
 let rec rtree_of_tree t =
-
   match t with
       Br(Some x, left, _) ->
         RBr(x, (map rtree_of_tree (brothers left)))
