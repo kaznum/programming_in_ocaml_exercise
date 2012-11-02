@@ -1,3 +1,4 @@
+
 type 'a tree = Lf | Br of 'a * 'a tree * 'a tree;;
 let comptree = Br(1,
 		  Br(2, Br(4, Lf, Lf),Br(5, Lf, Lf)),
@@ -27,6 +28,10 @@ let rec postorder = function
   | Br (x, left, right) -> (postorder left) @ (postorder right) @ [x];;
 postorder comptree;;
 
+let rec fold_left f e l =
+  match l with
+      [] -> e
+    | x :: rest -> fold_left f (f e x) rest;;
 let reverse l = fold_left (fun x y -> y::x) [] l;;
 reverse [1;2;3;4;5];;
 
