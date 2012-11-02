@@ -53,3 +53,24 @@ try find' 9 [0;8;7;3] with Division_by_zero -> 0;;
 try find' 9 [0;8;7;3] with
     Not_found -> 1/0
   | Division_by_zero -> -1;;
+
+
+exception Foo;;
+exception Bar of int;;
+
+let find x l =
+  let rec find' = function
+    [] -> raise Foo
+    | a :: l when a = x -> 1
+    | _ :: l -> 1 + find' l
+  in try find' l with Foo -> 0;;
+
+let exnlist = [Bar 3; Foo];;
+let f = function
+  Foo -> 0
+  | x -> raise x;;
+f Foo;;
+f (Bar 4);;
+
+failwith "foo";;
+
