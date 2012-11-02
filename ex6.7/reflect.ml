@@ -27,26 +27,9 @@ let rec postorder = function
   | Br (x, left, right) -> (postorder left) @ (postorder right) @ [x];;
 postorder comptree;;
 
-(* preorder(reflect(t)) *)
-let rec preorder_reflect t =
-  match t with
-      Lf -> []
-    | Br (x, left, right) -> x::(preorder_reflect right) @ (preorder_reflect left);;
-preorder_reflect comptree;;
-preorder(reflect(comptree));;
+let reverse l = fold_left (fun x y -> y::x) [] l;;
+reverse [1;2;3;4;5];;
 
-(* inorder(reflect(t)) *)
-let rec inorder_reflect t =
-  match t with
-      Lf -> []
-    | Br (x, left, right) -> (inorder_reflect right) @ x::(inorder_reflect left);;
-inorder_reflect comptree;;
-inorder(reflect(comptree));;
-
-(* postorder(reflect(t)) *)
-let rec postorder_reflect t =
-  match t with
-      Lf -> []
-    | Br (x, left, right) -> (postorder_reflect right) @ (postorder_reflect left) @ [x];;
-postorder_reflect comptree;;
-postorder(reflect(comptree));;
+preorder(reflect(comptree)) = reverse(postorder(comptree));;
+inorder(reflect(comptree)) = reverse(inorder(comptree));;
+postorder(reflect(comptree)) = reverse(preorder(comptree));;
