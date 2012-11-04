@@ -54,3 +54,37 @@ let update_string s1 s2 =
 update_string "xyz" "xyz";;
 let s = "xyz" in update_string s s;;
 
+type teacher = { name : string; mutable office : string };;
+
+let t = { name = "Igarashi"; office = "140" };;
+
+t.office <- "142";;
+t;;
+
+t.office.[2] <- '3';;
+t;;
+
+let p = ref 5 and q = ref 2;;
+
+(!p, !q);;
+(p, q);;
+
+p := !p + !q;;
+(!p, !q);;
+
+let reflist = [p;q;p];;
+p := 100;;
+reflist;;
+
+let p = ref 5 and q = ref 2;;
+let refp = ref p and refq = ref q;;
+!refq := !(!refp);;
+(!p, !q);;
+
+p := 5;;
+p;;
+!p;;
+let p = ref 6;;
+p;;
+!p;;
+
