@@ -211,3 +211,18 @@ q;;
 ignore(take q); add 5 q; peek q;;
 q;;
 
+open_in;;
+
+input_char;;
+input_line;;
+input_byte;;
+close_in;;
+
+open_out;;
+output_char;;
+output_string;;
+output_byte;;
+close_out;;
+
+open_out_gen;;
+
