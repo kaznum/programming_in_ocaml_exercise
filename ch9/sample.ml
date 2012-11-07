@@ -150,3 +150,47 @@ let table' = table <<< ("a", "an indefinite article") in
 (Table1.retrieve "a" table', Table1.dump table');;
 
 Table1.delete "a" table';;
+
+(* AbsTable *)
+module type TABLE2 =
+  sig
+    type ('a, 'b) t  (* abstracted *)
+    val empty : ('a, 'b) t
+    val add : 'a -> 'b -> ('a, 'b) t -> ('a, 'b) t
+    val retrieve : 'a -> ('a, 'b) t -> 'b option
+    val dump : ('a, 'b) t -> ('a * 'b) list
+  end;;
+
+module AbsTable : TABLE2 = Table;;
+
+Table.Empty;;
+AbsTable.Empty;;
+
+Table.empty;;
+AbsTable.empty;;
+
+let atable = AbsTable.add "a" "the first letter of the Englishalphabet" AbsTable.empty;;
+
+(* the following occurs error *)
+AbsTable.add "a" "the first letter of the Englishalphabet" Table.empty;;
+
+(* TableAL *)
+
+module TableAL : TABLE2 =
+  struct
+    type ('a, 'b) t = ('a * 'b) list
+    let empty = []
+    let add key datum table = (key, datum) :: table
+    let retrieve key table =
+      try Some (List.assoc key table) with Not_found -> None
+
+    let delete key table =
+      List.filter (fun (key', datum) -> key <> key') table
+
+    let rec dump = function
+        [] -> []
+      | (key, datum) :: rest -> (key, datum) :: (dump (delete key rest))
+  end;;
+
+module AbsTableAL : TABLE2 = TableAL;;
+
