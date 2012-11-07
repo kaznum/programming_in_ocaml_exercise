@@ -56,3 +56,76 @@ Num.(+/) x y;;
 
 open Num;;
 string_of_num (x //y +/ y // x);;
+
+module Tree =
+  struct
+    type 'a t = Lf | Br of 'a * 'a t * 'a t
+
+    let rec size = function
+        Lf -> 0
+      | Br (_, left, right) -> 1 + size left + size right
+
+    let rec depth = function
+        Lf -> 0
+      | Br (_, left, right) -> 1 + max (depth left) (depth right)
+  end;;
+
+
+let tr = Tree.Br (1, Tree.Lf, Tree.Br(2, Tree.Lf, Tree.Lf));;
+Tree.depth tr;;
+Tree.size tr;;
+
+module M =
+  struct
+    type r = {a: int; b: int}
+  end;;
+
+let x = {M.a = 1; M.b = 2};;
+
+x.M.a + x.M.b;;
+
+module Table =
+  struct
+    type ('a, 'b) t = Empty | Entry of 'a * 'b * ('a, 'b) t
+    let empty = Empty
+    let add key datum table = Entry (key, datum, table)
+
+    let rec retrieve key = function
+        Empty -> None
+      | Entry (key', datum, rest) ->
+	if key = key' then Some datum else retrieve key rest
+
+    let rec delete key = function
+        Empty -> Empty
+      | Entry (key', datum, rest) ->
+	if key = key' then delete key rest
+	else Entry (key', datum, delete key rest)
+
+    let rec dump = function
+        Empty -> []
+      | Entry (key, contents, rest) ->
+	(key, contents) :: (dump (delete key rest))
+  end;;
+
+let ( <<< ) table (key, content) = Table.add key content table;;
+
+let table = Table.empty
+  <<< ("a", "the first letter of the English alphabet")
+  <<< ("b", "the second letter of the English alphabet")
+  <<< ("zzz", "sleeping noise");;
+
+Table.retrieve "a" table;;
+let table' = table <<< ("a", "an indefinite article");;
+
+Table.retrieve "a" table';;
+table';;
+Table.dump table';;
+
+Table.delete "a" table';;
+
+Table.Empty <<< ("z", "the last letter of the English alphabet");;
+
+let is_empty = function
+    Table.Empty -> true
+  | Table.Entry _ -> false;;
+is_empty table';;
