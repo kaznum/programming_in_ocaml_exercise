@@ -129,3 +129,24 @@ let is_empty = function
     Table.Empty -> true
   | Table.Entry _ -> false;;
 is_empty table';;
+
+module type TABLE1 =
+  sig
+    type ('a, 'b) t = Empty | Entry of 'a * 'b * ('a, 'b) t
+    val empty : ('a, 'b) t
+    val add : 'a -> 'b -> ('a, 'b) t -> ('a, 'b) t
+    val retrieve : 'a -> ('a, 'b) t -> 'b option
+    val dump : ('a, 'b) t -> ('a * 'b) list
+  end;;
+
+module Table1 : TABLE1 = Table;;
+
+let ( <<< ) table (key, content) = Table1.add key content table in
+let table = Table1.empty
+  <<< ("a", "the first letter of the English alphabet")
+  <<< ("b", "the second letter of the English alphabet")
+  <<< ("zzz", "sleeping noise") in
+let table' = table <<< ("a", "an indefinite article") in
+(Table1.retrieve "a" table', Table1.dump table');;
+
+Table1.delete "a" table';;
