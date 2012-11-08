@@ -1,0 +1,13 @@
+.PHONY: clean all
+
+EXECS = true false cat
+USE_OCAMLFIND = true
+OCamlProgram(true, true)
+OCamlProgram(false, false)
+OCamlProgram(cat, cat)
+.DEFAULT: all
+all: true false cat
+
+clean:
+	- rm -f *~ $(EXECS) *.opt *.cmi *.cmx *.o *.omc *.cmt *.annot *.cmo *.cmti
+
