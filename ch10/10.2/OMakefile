@@ -1,0 +1,13 @@
+.PHONY: all run clean
+
+USE_OCAMLFIND = true
+FILES[] = main fact
+PROGRAM = fact10
+.DEFAULT: run
+all: $(OCamlProgram $(PROGRAM), $(FILES))
+
+clean:
+	- rm -f *~ $(PROGRAM) *.opt *.cmi *.cmx *.o *.omc *.cmt *.annot
+
+run: all
+  ./$(PROGRAM)
