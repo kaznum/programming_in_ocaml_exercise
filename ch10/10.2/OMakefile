@@ -7,7 +7,7 @@ PROGRAM = fact10
 all: $(OCamlProgram $(PROGRAM), $(FILES))
 
 clean:
-	- rm -f *~ $(PROGRAM) *.opt *.cmi *.cmx *.o *.omc *.cmt *.annot
+	- rm -f *~ $(PROGRAM) *.opt *.cmi *.cmx *.o *.omc *.cmt *.annot *.cmo
 
 run: all
   ./$(PROGRAM)
