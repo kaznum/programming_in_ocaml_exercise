@@ -1,0 +1,13 @@
+.PHONY: all run clean
+
+USE_OCAMLFIND = true
+FILES[] = table tablemain
+PROGRAM = tablemain
+.DEFAULT: run
+all: $(OCamlProgram $(PROGRAM), $(FILES))
+
+clean:
+	- rm -f *~ $(PROGRAM) *.opt *.cmi *.cmx *.o *.omc *.cmt *.annot *.cmo *.cmti
+
+run: all
+  ./$(PROGRAM)
