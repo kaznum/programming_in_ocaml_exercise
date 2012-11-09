@@ -45,6 +45,6 @@ let display_results b w l file =
 let _ =
   Arg.parse spec
     (fun s -> filenames := s :: !filenames)
-    "Usage: cat [-c] [-w] [-l] [-help] [-version] filename ...";
+    "Usage: wc [-c] [-w] [-l] [-help] filename ...";
   List.iter (fun s -> display_results !display_bytenum !display_wordnum !display_linenum s) (List.rev !filenames)
 
