@@ -1,0 +1,13 @@
+.PHONY: all run clean
+
+USE_OCAMLFIND = true
+FILES[] = fold
+PROGRAM = fold
+.DEFAULT: run
+all: $(OCamlProgram $(PROGRAM), $(FILES))
+
+clean:
+	- rm -f *~ $(PROGRAM) *.opt *.cmi *.cmx *.o *.omc *.cmt *.annot *.cmo
+
+run: all
+  ./$(PROGRAM)
