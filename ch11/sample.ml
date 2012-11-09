@@ -192,3 +192,33 @@ let s3 = inter s1 s2 in
 (mem 1 s3, mem 2 s3, mem 3 s3);;
 
 
+(* 複数の引数をとるファンクター*)
+module Pair =
+  struct
+    module Elt =
+      struct
+	type t = int
+	let compare i j = i - j
+      end
+    module Set = MakeAbstractSet'(Elt)
+  end;;
+
+module type Psig =
+  sig
+    module Elt : OrderedType
+    module Set : SET with type elt = Elt.t
+  end;;
+
+module MakeTest(P : Psig) =
+  struct
+    let test_elements set =
+      let rec loop = function
+          [] | [_] -> true
+	| x::y::rest ->
+	  if P.Elt.compare x y > 0 then false
+	  else loop (y::rest)
+      in loop (P.Set.elements set)
+  end;;
+
+module Test = MakeTest (Pair);;
+Test.test_elements (Pair.Set.add 1 (Pair.Set.add 2 Pair.Set.empty));;
