@@ -99,7 +99,7 @@ let s3 = inter s1 s2 in
 (mem 1 s3, mem 2 s3, mem 3 s3);;
 (* IntSet'' の内部で使用されるシグニチャのOrder.tの部分がOrderedInt''.tに置き換えられる *)
 
-
+(* 本文中の MyIntSet *)
 module MyIntSet = MakeSet (struct
   type t = int
   let compare i j = i - j
@@ -114,3 +114,5 @@ and s2 = add 1 (add 3 empty);;
 let s3 = inter s1 s2 in
 (mem 1 s3, mem 2 s3, mem 3 s3);;
 (* IntSet の内部で使用されるシグニチャのOrder.tの部分がintに置き換えられる *)
+
+
