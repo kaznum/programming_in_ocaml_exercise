@@ -134,3 +134,37 @@ end
 ;;
 
 new demo_calc 32 28;;
+
+(* inheritance *)
+class calc_minus =
+object
+  inherit calc
+  method minus = let x = num in func <- (fun y -> x - y)
+end
+;;
+let cm = new calc_minus in
+cm#input 13; cm#minus; cm#input 4; cm#eq;;
+
+(* inherit and override *)
+class calc_for_kids =
+object
+  inherit calc_minus
+  method eq = max (func num) 0
+end;;
+
+let kc = new calc_for_kids in
+kc#input 4; kc#minus; kc#input 13; kc#eq;;
+let kc = new calc_for_kids in
+kc#input 4; kc#minus; kc#input 3; kc#eq;;
+
+(* inherit and call a super class method *)
+class calc_for_kids2 =
+  object
+  inherit calc_minus as super
+  method eq = max (super#eq) 0
+end;;
+
+let kc = new calc_for_kids2 in
+kc#input 4; kc#minus; kc#input 13; kc#eq;;
+let kc = new calc_for_kids2 in
+kc#input 4; kc#minus; kc#input 3; kc#eq;;
