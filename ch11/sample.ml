@@ -4,6 +4,16 @@ module IntSet = Set.Make (
     let compare i j = i - j
   end);;
 
+(* 以下は、Makeの引数の内容を一度moduleで定義してからIntSetを定義 *)
+(*
+module IntElm =
+  struct
+    type t = int
+    let compare i j = i - j
+  end
+
+module IntSet = Set.Make (IntElm);;
+*)
 
 open IntSet;;
 
