@@ -56,7 +56,7 @@ module MakeSet ( Order : OrderedType ) =
   end;;
 
 (* OrderedType を明示した場合 *)
-   
+
 module OrderedInt' : OrderedType =
   struct
     type t = int
@@ -64,8 +64,11 @@ module OrderedInt' : OrderedType =
   end;;
 
 module IntSet' = MakeSet (OrderedInt');;
-(* IntSet' の内部で使用されるシグニチャのOrder.tの部分がOrderedInt'.tに置き換えられる。
-しかし、以下の実行結果のとおり、OrderedInt'.tをintとして認識できない *)
+(*
+  IntSet' の内部で使用されるシグニチャのOrder.tの部分がOrderedInt'.tに置き換えられる。
+  しかし、以下の実行結果のとおり、OrderedInt'.tをintとして認識できない。
+  (OrderedType.tが隠蔽されているため、OrderedInt'.tも隠蔽されてしまう)
+*)
 
 open IntSet';;
 
@@ -81,7 +84,7 @@ Error: This expression has type int but an expression was expected of type
 
 
 (* OrderedType を明示しない場合 *)
-   
+
 module OrderedInt'' =
   struct
     type t = int
@@ -114,5 +117,3 @@ and s2 = add 1 (add 3 empty);;
 let s3 = inter s1 s2 in
 (mem 1 s3, mem 2 s3, mem 3 s3);;
 (* IntSet の内部で使用されるシグニチャのOrder.tの部分がintに置き換えられる *)
-
-
