@@ -169,3 +169,17 @@ kc#input 4; kc#minus; kc#input 13; kc#eq;;
 let kc = new calc_for_kids2 in
 kc#input 4; kc#minus; kc#input 3; kc#eq;;
 
+(* annonymous class's object *)
+let calc_obj =
+object
+  val mutable num = 0
+  val mutable func = fun x -> x
+
+  method input n = num <- n
+  method plus = let x = num in func <- (fun y -> x + y)
+  method eq = func num
+end
+;;
+
+let foo x = if x then calc_obj else new calc;;
+[calc_obj; new calc];;
