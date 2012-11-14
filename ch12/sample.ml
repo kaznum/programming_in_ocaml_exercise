@@ -8,7 +8,7 @@ object
   method eq = func num
 end
 ;;
-			      
+
 let c = new calc;;
 c#input 4; c#plus; c#input 2; c#eq;;
 
@@ -168,3 +168,4 @@ let kc = new calc_for_kids2 in
 kc#input 4; kc#minus; kc#input 13; kc#eq;;
 let kc = new calc_for_kids2 in
 kc#input 4; kc#minus; kc#input 3; kc#eq;;
+
