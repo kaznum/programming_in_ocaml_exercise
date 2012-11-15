@@ -305,3 +305,95 @@ object (s)
   method eq = s#incr; super#eq
 end;;
 
+let generic_calc init f =
+object
+  val mutable num = init
+  val mutable func = fun x -> x
+
+  method input n = num <- n
+  method op = func <- f num
+  method eq = func num
+end;;
+
+let f_calc = generic_calc 0.0 (fun x y -> x *. y) in
+f_calc#input 2.0; f_calc#op; f_calc#input 3.14; f_calc#eq;;
+
+let s_calc = generic_calc "" (fun x y -> x ^ y) in
+s_calc#input "Hello, "; s_calc#op; s_calc#input "World!"; s_calc#eq;;
+
+class virtual ['a] generic_calc init =
+object
+  val mutable num = (init : 'a)
+  val mutable func = fun x -> x
+
+  method input n = num <- n
+  method virtual op : unit
+  method eq = func num
+end;;
+
+class fcalc =
+object
+  inherit [float] generic_calc 0.0
+  method op = let x = num in func <- (fun y -> x *. y)
+end;;
+
+let f_calc = new fcalc;;
+
+(f_calc :> float generic_calc);;
+
+(* polymorphic method *)
+class ['a] olist init =
+object
+  val mutable l = (init : 'a list)
+  method cons a = l <- a :: l
+  method length = List.length l
+  method append l' = l <- List.append l l'
+end
+;;
+
+class ['a, 'b] olist_fold init =
+object
+  inherit ['a] olist init
+  method fold_right f (e : 'b) = List.fold_right f l e
+end;;
+
+let l = new olist_fold [1;2;3];;
+
+l#fold_right (fun x y -> float_of_int x +. y) 0.0;;
+l;;
+
+(* error *)
+l#fold_right (fun x y -> string_of_int x ^ "; " ^ y) "";;
+
+
+class ['a] olist_fold' init =
+object
+  inherit ['a] olist init
+  method fold_right : 'b.('a -> 'b -> 'b) -> 'b -> 'b =
+    fun f e -> List.fold_right f l e
+end;;
+
+let l = new olist_fold' [1;2;3];;
+
+l#fold_right (fun x y -> float_of_int x +. y) 0.0;;
+l;;
+
+(* no error *)
+l#fold_right (fun x y -> string_of_int x ^ "; " ^ y) "";;
+
+
+(* 自身を示す名前に型注釈をつけるパターン *)
+class ['a] olist_fold' init =
+object (self : <fold_right : 'b.('a -> 'b -> 'b) -> 'b -> 'b; ..>)
+  inherit ['a] olist init
+  method fold_right f e = List.fold_right f l e
+end;;
+
+let l = new olist_fold' [1;2;3];;
+
+l#fold_right (fun x y -> float_of_int x +. y) 0.0;;
+l;;
+
+(* no error *)
+l#fold_right (fun x y -> string_of_int x ^ "; " ^ y) "";;
+
