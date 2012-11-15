@@ -207,3 +207,101 @@ input_ten (new calc_for_kids);;
 (* error *)
 input_ten (object method input i = print_int i end);;
 
+let input_ten calc = calc#input 10
+and push_plus calc = calc#plus;;
+
+let f b = if b then input_ten else push_plus;;
+
+let k1 a b = a
+and k2 a b = b;;
+
+let f b = if b then k1 else k2;;
+
+let input_foo c = c#input "foo";;
+
+(* error *)
+let f b = if b then input_ten else input_foo;;
+
+(* error *)
+type t = <m: int; ..>;;
+type pair = 'a * 'a ;;
+
+(* virtual class/method *)
+class virtual abstract_calc_demo n m op_name =
+object (s)
+  val mutable num = 0
+  val mutable func = fun x -> x
+
+  method input n = num <- n
+  method virtual op : unit (* virtual *)
+  method eq = func num
+  initializer
+    s#input n; s#op; s#input m;
+    Printf.printf "%d %s %d = %d\n" n op_name m s#eq
+end;;
+
+(* error *)
+new abstract_calc_demo 3 5 "op";;
+
+class calc_demo_plus n m =
+object
+  inherit abstract_calc_demo n m "+"
+  method op = let x = num in func <- (fun y -> x + y)
+end;;
+new calc_demo_plus 6 9;;
+
+class calc_demo_mult n m =
+object
+  inherit abstract_calc_demo n m "*"
+  method op = let x = num in func <- (fun y -> x * y)
+end;;
+
+new calc_demo_mult 6 9;;
+
+class calc_many_buttons_00 =
+object
+  inherit calc_many_buttons' as super
+  method zerozero = super#shift 0; super#shift 0
+end;;
+
+class calc_counter:
+object
+  inherit calc
+  method get : int
+end
+  =
+object (s)
+  inherit calc as super
+  val mutable c = 0
+
+  method get = c
+  method private incr = c <- c + 1
+  method eq = s#incr; super#eq
+end;;
+
+class virtual foo :
+object
+  val a : int
+  method virtual m : int -> int
+end
+    =
+object
+  val mutable a = 0
+  method m x = 100 + x
+end;;
+
+class type calc_counter_t =
+object
+  inherit calc
+  method get : int
+end;;
+
+class calc_counter : calc_counter_t =
+object (s)
+  inherit calc as super
+  val mutable c = 0
+  method get = c
+  method private incr = c <- c+1
+  method eq = s#incr; super#eq
+end;;
+
