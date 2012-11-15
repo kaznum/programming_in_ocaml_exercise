@@ -183,3 +183,27 @@ end
 
 let foo x = if x then calc_obj else new calc;;
 [calc_obj; new calc];;
+
+(* 部分型, パラメトリック多相 *)
+
+(* error *)
+[new calc; new calc_double; new calc_minus];;
+
+(* succeed *)
+[new calc; (new calc_double :> calc); (new calc_minus :> calc)];;
+
+let test_calc c = c#input 10; c#plus; c#input 20; c#eq = 30
+in test_calc(new calc) && test_calc(new calc_for_kids);;
+
+let test_calc c = c#input 10; c#plus; c#input 20; c#eq = 30;;
+(*
+  val test_calc : < eq : int; input : int -> 'a; plus : 'b; .. > -> bool =
+  <fun>
+*)
+
+let input_ten (c : #calc) = c#input 10;;
+input_ten (new calc_for_kids);;
+
+(* error *)
+input_ten (object method input i = print_int i end);;
+
