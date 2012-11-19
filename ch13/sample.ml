@@ -78,3 +78,39 @@ seq 1 10 ~step:4;;
 (* error *)
 let f = seq 1 10 in f ~step:4;;
 (seq 1 10) ~step:4;;
+
+let rec seq from ?step n =
+  match step with
+      None -> if n <= 0 then [] else from :: seq (from + 1) (n-1)
+    | Some s ->
+      if n <= 0 then [] else from :: seq ( from + s ) ~step:s (n-1);;
+
+seq 1 10 ~step:4;;
+seq 1 10;;
+
+let rec seq from ?step n =
+  let s = match step with None -> 1 | Some s -> s in
+  if n <= 0 then [] else from :: seq (from + s) ~step:s (n - 1);;
+
+let rec seq from ?step n =
+  let s = match step with None -> 1 | Some s -> s in
+  if n <= 0 then [] else from :: seq (from + s) ?step (n - 1);;
+
+(* error *)
+let test f = f 10 ~step:2 4;;
+test seq;;
+
+(* succeed *)
+let test (f : int -> ?step:int -> int -> 'a list) = f 10 ~step:2 4;;
+test seq;;
+
+
+let test' f = f 10 4;;
+let g ?(x=4) y z = x + y + z;;
+test' g;;
+
+(* error *)
+test' seq;;
+
+test' (fun y z -> g ?x:None y z);;
+test' (fun y z -> seq 10 ?step:None 4);;
