@@ -14,7 +14,7 @@ type board = {
 let rec removeNP cells =
   match cells with
       [] -> []
-    | NotPresssed::cells -> removeNP cells
+    | NotPressed::cells -> removeNP cells
     | cells -> cells
 
 (* cellsの先頭のn >= 0 個のPressedを除去 *)

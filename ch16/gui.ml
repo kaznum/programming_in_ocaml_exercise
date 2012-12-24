@@ -31,11 +31,11 @@ let rec string_of_spec sep = function
 (* 操作 *)
 let focus label _ = Label.configure label ~background:selcol
 let unfocus label st _ =
-  Labal.configure label ~background:(col_of_state !st)
+  Label.configure label ~background:(color_of_state !st)
 
 let pressed label st _ =
   st := toggle !st;
-  Label.configure label ~reliefe:(relief_of_state !st) ~background:(color_of_state !st)
+  Label.configure label ~relief:(relief_of_state !st) ~background:(color_of_state !st)
 
 (* 1マスをクリア *)
 let clear label st _ =
@@ -56,6 +56,6 @@ let quit () = closeTk(); exit 0
 (* 正誤をlabelに表示 *)
 let check h_spec v_spec body label () =
   if is_solved h_spec v_spec body
-  then Label.configure lable ~text:"正解!" ~foreground:`Red
-  else Label.configure lable ~text:"残念..." ~foreground:`Blue
+  then Label.configure label ~text:"正解!" ~foreground:`Red
+  else Label.configure label ~text:"残念..." ~foreground:`Blue
 

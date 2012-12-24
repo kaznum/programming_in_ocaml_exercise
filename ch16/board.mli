@@ -15,7 +15,7 @@ type board = {
 
 (* マス目が解となっているかどうかチェック *)
 val is_solved :
-  h_spec:spec list -> v_spec:spec_list -> state ref list list -> bool
+  h_spec:spec list -> v_spec:spec list -> state ref list list -> bool
 
 (* 問題から初期画面を作成する *)
 val board_of_spec : h_spec:spec list -> v_spec:spec list -> board
