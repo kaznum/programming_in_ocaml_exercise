@@ -16,7 +16,7 @@ ilogic : $(OBJS)
 	ocamlc -c $(INCLUDE) $<
 
 clean::
-	-rm -rf *.cmi *.cmo $(TARGET) *.cmx *~
+	-rm -rf *.cmi *.cmo $(TARGET) *.cmx *.cmti .depend *~
 
 depend:: $(DEPEND)
 	ocamldep *.mli *.ml > .depend
